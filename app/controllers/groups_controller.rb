@@ -1,4 +1,7 @@
 class GroupsController < ApplicationController
+
+  before_action :login_required, :only => [:new, :create, :edit, :update, :destroy]
+
 	def index
 	  @groups = Group.all
 	end
@@ -13,22 +16,27 @@ class GroupsController < ApplicationController
 	end
 
 	def create
-	  @group = Group.new(group_params)
-	  @group.save
-	
-	 redirect_to groups_path #回到首頁
-	 # redirect_to :action => :index #回到首頁
-	 # redirect_to @group #回到show頁
- 
+	  #@group = Group.new(group_params)
+	  @group = current_user.groups.build(group_params)
+	 if  @group.save
+	   current_user.join!(@group)
+	   redirect_to groups_path #回到首頁
+	   # redirect_to :action => :index #回到首頁
+	   # redirect_to @group #回到show頁
+  	 else
+	   render :new
+	 end
 	end
 
 	def edit
-	  @group = Group.find(params[:id])
+	  #@group = Group.find(params[:id])
+	  @group = current_user.groups.find(params[:id])
 	end
 
 	def update
-	  @group = Group.find(params[:id])
-	  
+	  #@group = Group.find(params[:id])
+	  @group = current_user.groups.find(params[:id])
+	
 	  if @group.update(group_params)
 		redirect_to group_path(@group)
 	  else
@@ -37,12 +45,35 @@ class GroupsController < ApplicationController
 	end
 
         def destroy
-          @group = Group.find(params[:id])
-
+         # @group = Group.find(params[:id])
+	  @group= current_user.groups.find(params[:id])
+	
           @group.destroy
 
           redirect_to groups_path
         end
+
+	def join
+	    @group = Group.find(params[:id])
+
+	    if !current_user.is_member_of?(@group)
+	    	current_user.join!(@group)
+	    else
+		flash[:warning] = "You already joined this group."
+	    end
+	    redirect_to groups_path(@group)
+	end
+
+	def quit
+	    @group = Group.find(params[:id])
+
+	    if current_user.is_member_of?(@group)
+	  	current_user.quit!(@group)
+	    else
+		flash[:warning] = "You are not member of this group."
+	    end
+	    redirect_to groups_path(@group)
+	end
 
 	
         private
