@@ -19,7 +19,7 @@ class GroupsController < ApplicationController
 	  #@group = Group.new(group_params)
 	  @group = current_user.groups.build(group_params)
 	 if  @group.save
-	   current_user.join!(@group)
+	  # current_user.join!(@group)
 	   redirect_to groups_path #回到首頁
 	   # redirect_to :action => :index #回到首頁
 	   # redirect_to @group #回到show頁

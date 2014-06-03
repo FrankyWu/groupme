@@ -36,7 +36,7 @@
 	<% end %>
      </div>
   <% end %>
-  <% if current_user && @group.editable_by?(current_user) %>
+  <% if current_user.is_member_of?(@group) %>
     <%= link_to("Back to index",groups_path) %>
   <% end %> 
 </div>
