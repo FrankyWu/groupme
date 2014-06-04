@@ -13,6 +13,7 @@ class PostsController < ApplicationController
 	@post.author = current_user
 	
 	if @post.save
+	   # Group.increment_counter(:posts_count, @group.id)
 	    redirect_to group_path(@group)
 	else
 	    render :new
@@ -41,6 +42,7 @@ class PostsController < ApplicationController
 
 	@post.destroy
 
+	#Group.decrement_counter (:posts_count, @group.id)
 	redirect_to group_path(@group)
     end
 
