@@ -1,6 +1,9 @@
 <div class="span12">
     <div class = "group">
 	<%= link_to("New group" , new_group_path , :class =>"btn btn-mini btn-primary pull-right")%>
+    	<%= link_to("My group" , account_groups_path ) %>
+	<%= link_to("My post"  , account_posts_path) %>
+	<%= link_to("Logout" , destroy_user_session_path, :method => :delete) %>
     </div>
     <table class = "table">
 	<thead>
